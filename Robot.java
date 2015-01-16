@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5631.robot;
+package org.usfirst.frc.team5631.robot.Robotics;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
