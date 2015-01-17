@@ -45,6 +45,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		//Testing
 		timer++;
 		if(timer < 60)
 		robot.drive(0.25,0);
