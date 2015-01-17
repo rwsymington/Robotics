@@ -2,6 +2,7 @@ package org.usfirst.frc.team5631.robot.Robotics;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 
@@ -16,6 +17,7 @@ public class Robot extends IterativeRobot {
 	Joystick driver;
 	Talon rightMotor1, rightMotor2, leftMotor1, leftMotor2;
 	BuiltInAccelerometer acc;
+	RobotDrive robot;
 
 	private double limiter;
 	private int timer;
@@ -43,7 +45,14 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-
+		timer++;
+		if(timer < 60)
+		robot.drive(0.25,0);
+		if(timer > 60 && timer < 120)
+			robot.drive(0.25,1);
+		if(timer > 120){
+			timer = 0;
+		}
 	}
 
 	/**
