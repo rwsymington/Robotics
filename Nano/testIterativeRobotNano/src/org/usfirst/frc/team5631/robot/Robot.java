@@ -4,6 +4,7 @@ package org.usfirst.frc.team5631.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 
@@ -24,6 +25,10 @@ public class Robot extends IterativeRobot {
 	private boolean b = false;
 	private double leftM, rightM;
 
+	// Auto
+	RobotDrive robot;
+	private boolean execute;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -39,20 +44,38 @@ public class Robot extends IterativeRobot {
 		timer = 0;
 		leftM = 1;
 		rightM = 1;
+
+		// Auto
+		robot = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
+		execute = false;
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-
+		if (!execute) {
+			if (driver.getRawButton(2)) {
+				execute = true;
+				timer = 0;
+			}
+		} else {
+			timer++;
+			if (timer < 60)
+				robot.drive(0.2, 0);
+			if (timer > 60 && timer < 120)
+				robot.drive(0.2, 1);
+			if (timer > 120) {
+				execute = false;
+			}
+		}
 	}
 
 	/**
 	 * This function is called periodically during operator control Simple tank
 	 * drive
 	 */
-	public void teleopPeriodic() {// MR C 
+	public void teleopPeriodic() {// MR C
 		// access brake button state
 		// button values can be inferred from driver station
 		boolean button = driver.getRawButton(1);
@@ -92,7 +115,7 @@ public class Robot extends IterativeRobot {
 		if (timer > 60) {
 			timer = 0;
 		}
-		
+
 		double xAxis = driver.getRawAxis(0);
 		if (xAxis < -0.1) {// left
 			leftM = 1 - Math.abs(xAxis);// slow down the left tracks
@@ -104,10 +127,11 @@ public class Robot extends IterativeRobot {
 			leftM = 1;
 			rightM = 1;
 		}
-		
-		double forward = driver.getRawAxis(1); //Front back
+
+		double forward = driver.getRawAxis(1); // Front back
 		double throttle = driver.getRawAxis(3);// will cap the max speed
-		double t = ((1 + -throttle) / 2); // determine the limiting value from 0-1
+		double t = ((1 + -throttle) / 2); // determine the limiting value from
+											// 0-1
 		if (driver.getRawButton(1)) {// brake (trigger button)
 			// set speeds to zero
 			leftMotor1.set(0);
@@ -121,23 +145,24 @@ public class Robot extends IterativeRobot {
 			rightMotor1.set((forward) * t * rightM); // move the right wheels
 			rightMotor2.set((forward) * t * rightM);
 			if (forward > -0.1 && forward < 0.1) {
-				if(driver.getRawAxis(2) < -0.1 || driver.getRawAxis(2) > 0.1){
-					leftMotor1.set(driver.getRawAxis(2)*t);
-					leftMotor2.set(driver.getRawAxis(2)*t);
-					rightMotor1.set(driver.getRawAxis(2)*t);
-					rightMotor2.set(driver.getRawAxis(2)*t);
+				if (driver.getRawAxis(2) < -0.1 || driver.getRawAxis(2) > 0.1) {
+					leftMotor1.set(driver.getRawAxis(2) * t);
+					leftMotor2.set(driver.getRawAxis(2) * t);
+					rightMotor1.set(driver.getRawAxis(2) * t);
+					rightMotor2.set(driver.getRawAxis(2) * t);
 				}
-				/*if (driver.getRawAxis(2) < -0.1) {//This can probably be removed
-					leftMotor1.set(-Math.abs(driver.getRawAxis(2))*t);
-					leftMotor2.set(-Math.abs(driver.getRawAxis(2))*t);
-					rightMotor1.set(-Math.abs(driver.getRawAxis(2))*t);
-					rightMotor2.set(-Math.abs(driver.getRawAxis(2))*t);
-				} else if (driver.getRawAxis(2) > 0.1) {// right only
-					leftMotor1.set(Math.abs(driver.getRawAxis(2))*t);
-					leftMotor2.set(Math.abs(driver.getRawAxis(2))*t);
-					rightMotor1.set(Math.abs(driver.getRawAxis(2))*t);
-					rightMotor2.set(Math.abs(driver.getRawAxis(2))*t);
-				}*/
+				/*
+				 * if (driver.getRawAxis(2) < -0.1) {//This can probably be
+				 * removed leftMotor1.set(-Math.abs(driver.getRawAxis(2))*t);
+				 * leftMotor2.set(-Math.abs(driver.getRawAxis(2))*t);
+				 * rightMotor1.set(-Math.abs(driver.getRawAxis(2))*t);
+				 * rightMotor2.set(-Math.abs(driver.getRawAxis(2))*t); } else if
+				 * (driver.getRawAxis(2) > 0.1) {// right only
+				 * leftMotor1.set(Math.abs(driver.getRawAxis(2))*t);
+				 * leftMotor2.set(Math.abs(driver.getRawAxis(2))*t);
+				 * rightMotor1.set(Math.abs(driver.getRawAxis(2))*t);
+				 * rightMotor2.set(Math.abs(driver.getRawAxis(2))*t); }
+				 */
 			}
 		}
 		if (timer == 60) {// data output
