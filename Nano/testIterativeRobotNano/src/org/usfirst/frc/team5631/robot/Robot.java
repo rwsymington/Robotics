@@ -45,6 +45,8 @@ public class Robot extends IterativeRobot {
 		leftM = 1;
 		rightM = 1;
 
+		System.out.println("Loading...");
+		
 		// Auto
 		robot = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
 		execute = false;
@@ -54,6 +56,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		System.out.println(execute +"\tBtn ~ " + driver.getRawButton(2));
 		if (!execute) {
 			if (driver.getRawButton(2)) {
 				execute = true;
@@ -111,6 +114,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+		System.out.println("TestPeriodic");
 		timer++;
 		if (timer > 60) {
 			timer = 0;
