@@ -1,5 +1,5 @@
-package org.usfirst.frc.team5631.robot.Robotics;
-//Nolan called Ryan racist.
+package org.usfirst.frc.team5631.robot;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -39,13 +39,14 @@ public class Robot extends IterativeRobot {
 		timer = 0;
 		leftM = 1;
 		rightM = 1;
+		robot = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		//Testing
+		//Test
 		timer++;
 		if(timer < 60)
 		robot.drive(0.25,0);
