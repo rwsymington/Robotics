@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	Joystick driver;
-	Talon rightMotor1, rightMotor2, leftMotor1, leftMotor2;
-	BuiltInAccelerometer acc;
+	Joystick driver;//The joystick
+	Talon rightMotor1, rightMotor2, leftMotor1, leftMotor2;// The individual motors
+	BuiltInAccelerometer acc;//The accelerometer
 
 	private double limiter;
-	private int timer;
+	private int timer;//The timer counts the number of refreshes done
 	private boolean b = false;
 	private double leftM, rightM;
 
@@ -28,12 +28,12 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	public void robotInit() {
+	public void robotInit() {//All commands being ran when the robot starts running
 		driver = new Joystick(0); // passing in port of the joystick
-		leftMotor1 = new Talon(0);
-		leftMotor2 = new Talon(1);
-		rightMotor1 = new Talon(2); // port is based on roboRio pwm ports
-		rightMotor2 = new Talon(3); // port is based on roboRio pwm ports
+		leftMotor1 = new Talon(0);// port is based on roboRio pwm ports
+		leftMotor2 = new Talon(1);// port is based on roboRio pwm ports
+		rightMotor1 = new Talon(2);// port is based on roboRio pwm ports
+		rightMotor2 = new Talon(3);// port is based on roboRio pwm ports
 		limiter = 1;
 		acc = new BuiltInAccelerometer();
 		timer = 0;
@@ -88,8 +88,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
-		timer++;
-		if (timer > 60) {
+		if (timer > 60){//Resets the timer
 			timer = 0;
 		}
 		
@@ -140,7 +139,8 @@ public class Robot extends IterativeRobot {
 				}*/
 			}
 		}
-		if (timer == 60) {// data output
+		timer++;//appends 1 to the timer
+		if (timer == 60) {//only outputs data after 1 second.
 			System.out.println("forward ~ " + forward + "\tThrottle ~ " + t
 					+ "\t Limiter ~ " + limiter);
 		}
