@@ -45,6 +45,8 @@ public class Robot extends IterativeRobot {
 		leftM = 1;
 		rightM = 1;
 
+		System.out.println("Loading...");
+		
 		// Auto
 		robot = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
 		execute = false;
@@ -54,8 +56,9 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		System.out.println(execute +"\tBtn ~ " + driver.getRawButton(1));
 		if (!execute) {
-			if (driver.getRawButton(2)) {
+			if (driver.getRawButton(1)) {
 				execute = true;
 				timer = 0;
 			}
@@ -76,34 +79,20 @@ public class Robot extends IterativeRobot {
 	 * drive
 	 */
 	public void teleopPeriodic() {// MR C
-		// access brake button state
-		// button values can be inferred from driver station
-		boolean button = driver.getRawButton(1);
-		// check if we should stop all motors
-		if (button) {
-			// set speeds to zero
-			leftMotor1.set(0);
-			leftMotor2.set(0);
-			rightMotor1.set(0);
-			rightMotor2.set(0);
-			System.out.println("Brake");
+		if (!execute) {
+			if (driver.getRawButton(1)) {
+				execute = true;
+				timer = 0;
+			}
 		} else {
-			// get value of left and right joysticks
-			double leftYAxis = driver.getRawAxis(1); // access corresponds to
-														// joystick (can find
-														// this on drivers
-														// station program)
-			double rightYAxis = driver.getRawAxis(5); // right stick on xbox
-														// controller
-			// invert the values
-			leftYAxis = leftYAxis * -1;
-			rightYAxis = rightYAxis;
-			// set motors to the values obtained from the joystick
-			leftMotor1.set(leftYAxis);
-			leftMotor2.set(leftYAxis);
-			rightMotor1.set(rightYAxis);
-			rightMotor2.set(rightYAxis);
-			System.out.println(leftYAxis + "," + rightYAxis);
+			timer++;
+			if (timer < 60)
+				robot.drive(0.2, 0);
+			if (timer > 60 && timer < 130)
+				robot.drive(0.2, 1);
+			if (timer > 130) {
+				execute = false;
+			}
 		}
 	}
 
@@ -111,6 +100,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+		System.out.println("TestPeriodic");
 		timer++;
 		if (timer > 60) {
 			timer = 0;
