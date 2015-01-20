@@ -3,6 +3,7 @@
 package org.usfirst.frc.team5631.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
@@ -24,6 +25,9 @@ public class Robot extends IterativeRobot {
 	private int timer;
 	private boolean b = false;
 	private double leftM, rightM;
+	
+	private Gyro gyro;
+	private int gyroInput = 1;
 
 	// Auto
 	RobotDrive robot;
@@ -44,7 +48,8 @@ public class Robot extends IterativeRobot {
 		timer = 0;
 		leftM = 1;
 		rightM = 1;
-
+		
+		gyro = new Gyro(gyroInput);
 		System.out.println("Loading...");
 		
 		// Auto
@@ -56,7 +61,14 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		System.out.println(execute +"\tBtn ~ " + driver.getRawButton(1));
+		
+	}
+
+	/**
+	 * This function is called periodically during operator control Simple tank
+	 * drive
+	 */
+	public void teleopPeriodic() {// MR C
 		if (!execute) {
 			if (driver.getRawButton(1)) {
 				execute = true;
@@ -75,32 +87,10 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * This function is called periodically during operator control Simple tank
-	 * drive
-	 */
-	public void teleopPeriodic() {// MR C
-		if (!execute) {
-			if (driver.getRawButton(1)) {
-				execute = true;
-				timer = 0;
-			}
-		} else {
-			timer++;
-			if (timer < 60)
-				robot.drive(0.2, 0);
-			if (timer > 60 && timer < 130)
-				robot.drive(0.2, 1);
-			if (timer > 130) {
-				execute = false;
-			}
-		}
-	}
-
-	/**
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
-		System.out.println("TestPeriodic");
+		System.out.println("Gyro ~ "+ gyro.getAngle());
 		timer++;
 		if (timer > 60) {
 			timer = 0;
