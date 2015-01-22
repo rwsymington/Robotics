@@ -26,9 +26,10 @@ public class Robot extends IterativeRobot {
 	private boolean b = false;
 	private double leftM, rightM;
 	
+	//gyro
 	private Gyro gyro;
 	private int gyroInput = 1;
-
+	private double adjust;
 	// Auto
 	RobotDrive robot;
 	private boolean execute;
@@ -50,8 +51,7 @@ public class Robot extends IterativeRobot {
 		rightM = 1;
 		
 		gyro = new Gyro(gyroInput);
-		System.out.println("Loading...");
-		
+		adjust = 0;
 		// Auto
 		robot = new RobotDrive(leftMotor1, leftMotor2, rightMotor1, rightMotor2);
 		execute = false;
@@ -68,7 +68,22 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control Simple tank
 	 * drive
 	 */
-	public void teleopPeriodic() {// MR C
+	public void teleopPeriodic() {//Set the gyro
+		
+		double throttle = driver.getRawAxis(3);// will cap the max speed
+		double t = ((1 + -throttle) / 2); // determine the limiting value from
+		
+		leftMotor1.set(driver.getRawAxis(2) * t);
+		leftMotor2.set(driver.getRawAxis(2) * t);
+		rightMotor1.set(driver.getRawAxis(2) * t);
+		rightMotor2.set(driver.getRawAxis(2) * t);
+		
+		if (driver.getRawButton(1)) {//set gyro
+			adjust = gyro.getAngle();
+		}
+	}
+	
+	public void command(){
 		if (!execute) {
 			if (driver.getRawButton(1)) {
 				execute = true;
@@ -149,6 +164,24 @@ public class Robot extends IterativeRobot {
 			System.out.println("forward ~ " + forward + "\tThrottle ~ " + t
 					+ "\t Limiter ~ " + limiter);
 		}
+	}
+	
+	//Swerve Drive - first try?
+	
+	public double getX(){ //xAxis = 0 yAxis = 1
+		double theta1 = Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1));
+		double h = driver.getRawAxis(1) / Math.sin(theta1);
+		double thetaX = gyro.getAngle()+theta1;
+		return (h*Math.sin(thetaX));
+		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1))))*Math.sin(gyro.getAngle()+(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1)))));
+	}
+	
+	public double getY(){
+		double theta2 = Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0));
+		double h = driver.getRawAxis(1) / Math.sin(theta2);
+		double thetaY = theta2 - gyro.getAngle();
+		return (h*Math.sin(thetaY));
+		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))*Math.sin((Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0))) - gyro.getAngle())));
 	}
 
 }
