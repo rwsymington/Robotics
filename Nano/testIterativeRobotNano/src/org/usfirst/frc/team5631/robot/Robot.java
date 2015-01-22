@@ -166,22 +166,22 @@ public class Robot extends IterativeRobot {
 		}
 	}
 	
-	//Swerve Drive - first try?
+	//Swerve Drive - first try? #itMightNotWork
 	
 	public double getX(){ //xAxis = 0 yAxis = 1
 		double theta1 = Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1));
 		double h = driver.getRawAxis(1) / Math.sin(theta1);
-		double thetaX = gyro.getAngle()+theta1;
+		double thetaX = (adjust-gyro.getAngle())+theta1;
 		return (h*Math.sin(thetaX));
-		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1))))*Math.sin(gyro.getAngle()+(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1)))));
+		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1))))*Math.sin((adjust-gyro.getAngle())+(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1)))));
 	}
 	
 	public double getY(){
 		double theta2 = Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0));
 		double h = driver.getRawAxis(1) / Math.sin(theta2);
-		double thetaY = theta2 - gyro.getAngle();
+		double thetaY = theta2 - (adjust-gyro.getAngle());
 		return (h*Math.sin(thetaY));
-		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))*Math.sin((Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0))) - gyro.getAngle())));
+		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))*Math.sin((Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0))) - (adjust-gyro.getAngle()))));
 	}
 
 }
