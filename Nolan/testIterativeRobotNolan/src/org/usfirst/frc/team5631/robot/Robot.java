@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 	}
 	public void testPeriodic() {
 		System.out.println("Gyro ~ "+ gyro.getAngle());
-		timer++;
+		timer++; 
 		if (timer > 60) {
 			timer = 0;
 		}
