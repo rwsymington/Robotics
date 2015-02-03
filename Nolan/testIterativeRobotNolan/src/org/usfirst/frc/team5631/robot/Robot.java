@@ -25,16 +25,17 @@ public class Robot extends IterativeRobot {
 	private int timer;
 	private boolean b = false;
 	private double leftM, rightM;
-	
-	//gyro
+
+	// gyro
 	private Gyro gyro;
 	private int gyroInput = 1;
 	private double adjust;
 	// Auto
 	RobotDrive robot;
-	private int execute;//Changing the execute command to an integer
-						//will check what the value is instead of using 
-						//a boolean to allow for different commands to be executed.
+	private int execute;// Changing the execute command to an integer
+						// will check what the value is instead of using
+						// a boolean to allow for different commands to be
+						// executed.
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -51,7 +52,7 @@ public class Robot extends IterativeRobot {
 		timer = 0;
 		leftM = 1;
 		rightM = 1;
-		
+
 		gyro = new Gyro(gyroInput);
 		adjust = 0;
 		// Auto
@@ -63,37 +64,37 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		
+
 	}
 
 	/**
 	 * This function is called periodically during operator control Simple tank
 	 * drive
 	 */
-	public void teleopPeriodic() {//Set the gyro
-		
+	public void teleopPeriodic() {// Set the gyro
+
 		double throttle = driver.getRawAxis(3);// will cap the max speed
 		double t = ((1 + -throttle) / 2); // determine the limiting value from
-		
+
 		leftMotor1.set(driver.getRawAxis(2) * t);
 		leftMotor2.set(driver.getRawAxis(2) * t);
 		rightMotor1.set(driver.getRawAxis(2) * t);
 		rightMotor2.set(driver.getRawAxis(2) * t);
-		
-		if (driver.getRawButton(1)) {//set gyro
+
+		if (driver.getRawButton(1)) {// set gyro
 			adjust = gyro.getAngle();
 		}
 	}
-	
-	public void command(){
-		if (execute==0) {
+
+	public void command() {
+		if (execute == 0) {
 			if (driver.getRawButton(1)) {
 				execute = 1;
 				timer = 0;
 			}
 		} else {
 			timer++;
-			switch(execute){
+			switch (execute) {
 			case 1://
 				if (timer < 60)
 					robot.drive(0.2, 0);
@@ -112,29 +113,29 @@ public class Robot extends IterativeRobot {
 					execute = 0;
 				}
 				break;
-			case 3://TODO: spin left  & right 1 revolution each.
-				if(){//
-				}else if(){//
-				}else if(timer>120){//
+			case 3:// TODO: spin left & right 1 revolution each.
+				if (timer < 30) {//
+				} else if (true) {// TODO: make the timer stuff work right
+				} else if (timer > 120) {//TODO: Get timer sh*t workin
 				}
 				break;
 			default:
 				vitalMessage();
 				break;
 			}
-			}			
 		}
 	}
 
 	/**
 	 * This function is called periodically during test mode
 	 */
-	public void vitalMessage(){
+	public void vitalMessage() {
 		System.out.println("Ryan is fat.");
 	}
+
 	public void testPeriodic() {
-		System.out.println("Gyro ~ "+ gyro.getAngle());
-		timer++; 
+		System.out.println("Gyro ~ " + gyro.getAngle());
+		timer++;
 		if (timer > 60) {
 			timer = 0;
 		}
@@ -193,23 +194,26 @@ public class Robot extends IterativeRobot {
 					+ "\t Limiter ~ " + limiter);
 		}
 	}
-	
-	//Swerve Drive - first try? #itMightNotWork
-	
-	public double getX(){ //xAxis = 0 yAxis = 1
-		double theta1 = Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1));
+
+	// Swerve Drive - first try? #itMightNotWork
+
+	public double getX() { // xAxis = 0 yAxis = 1
+		double theta1 = Math.atan(driver.getRawAxis(0) / driver.getRawAxis(1));
 		double h = driver.getRawAxis(1) / Math.sin(theta1);
-		double thetaX = (adjust-gyro.getAngle())+theta1;
-		return (h*Math.sin(thetaX));
-		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1))))*Math.sin((adjust-gyro.getAngle())+(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1)))));
+		double thetaX = (adjust - gyro.getAngle()) + theta1;
+		return (h * Math.sin(thetaX));
+		// return ((driver.getRawAxis(1) /
+		// Math.sin(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1))))*Math.sin((adjust-gyro.getAngle())+(Math.atan(driver.getRawAxis(0)/driver.getRawAxis(1)))));
 	}
-	
-	public double getY(){
-		double theta2 = Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0));
+
+	public double getY() {
+		double theta2 = Math.atan(driver.getRawAxis(1) / driver.getRawAxis(0));
 		double h = driver.getRawAxis(1) / Math.sin(theta2);
-		double thetaY = theta2 - (adjust-gyro.getAngle());
-		return (h*Math.sin(thetaY));
-		//return ((driver.getRawAxis(1) / Math.sin(Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))*Math.sin((Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0))) - (adjust-gyro.getAngle()))));
+		double thetaY = theta2 - (adjust - gyro.getAngle());
+		return (h * Math.sin(thetaY));
+		// return ((driver.getRawAxis(1) /
+		// Math.sin(Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))*Math.sin((Math.atan(driver.getRawAxis(1)/driver.getRawAxis(0)))
+		// - (adjust-gyro.getAngle()))));
 	}
 
 }
