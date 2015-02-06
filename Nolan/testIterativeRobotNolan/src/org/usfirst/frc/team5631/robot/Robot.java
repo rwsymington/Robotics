@@ -2,10 +2,12 @@
 
 package org.usfirst.frc.team5631.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 
@@ -18,9 +20,9 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
  */
 public class Robot extends IterativeRobot {
 	Joystick driver;
-	Talon rightMotor1, rightMotor2, leftMotor1, leftMotor2;
+	Talon rightMotor1, rightMotor2, leftMotor1, leftMotor2, upMotor1, upMotor2;
 	BuiltInAccelerometer acc;
-
+	double inPower;
 	private double limiter;
 	private int timer;
 	private boolean b = false;
@@ -36,17 +38,24 @@ public class Robot extends IterativeRobot {
 						// will check what the value is instead of using
 						// a boolean to allow for different commands to be
 						// executed.
+	//Compressor
+	DoubleSolenoid sol1, sol2;
+	
 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
+		sol1 = new DoubleSolenoid(1,2);
+
 		driver = new Joystick(0); // passing in port of the joystick
 		leftMotor1 = new Talon(0);
 		leftMotor2 = new Talon(1);
 		rightMotor1 = new Talon(2); // port is based on roboRio pwm ports
 		rightMotor2 = new Talon(3); // port is based on roboRio pwm ports
+		upMotor1 = new Talon(4);//Motors for the liftymagiger
+		upMotor2 = new Talon(5);
 		limiter = 1;
 		acc = new BuiltInAccelerometer();
 		timer = 0;
@@ -196,7 +205,27 @@ public class Robot extends IterativeRobot {
 	}
 
 	// Swerve Drive - first try? #itMightNotWork
-
+	public void compressionControl(){
+		if(driver.getRawButton(3)){
+			sol1.set(DoubleSolenoid.Value.kForward);
+			System.out.println("Solenoid State: Forward");
+		}else if(driver.getRawButton(4)){
+			System.out.println("Solenoid State: Reverse");
+			sol1.set(DoubleSolenoid.Value.kReverse);
+		}else{
+			System.out.println("Solenoid State: Off");
+			sol1.set(DoubleSolenoid.Value.kOff);
+		}
+	}
+	/*public void motorControl(){//TODO: make it so the motors go up
+		if(driver.getRawButton(12)){
+			double inPower;
+			upMotor1.set(inPower);
+			upMotor2.set(inPower);
+			System.out.println("");
+		}
+		
+	}*/
 	public double getX() { // xAxis = 0 yAxis = 1
 		double theta1 = Math.atan(driver.getRawAxis(0) / driver.getRawAxis(1));
 		double h = driver.getRawAxis(1) / Math.sin(theta1);
