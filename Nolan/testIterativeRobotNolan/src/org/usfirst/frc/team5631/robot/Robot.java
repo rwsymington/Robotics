@@ -203,7 +203,6 @@ public class Robot extends IterativeRobot {
 					+ "\t Limiter ~ " + limiter);
 		}
 	}
-
 	// Swerve Drive - first try? #itMightNotWork
 	public void compressionControl(){
 		if(driver.getRawButton(3)){
